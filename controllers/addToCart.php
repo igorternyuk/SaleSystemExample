@@ -25,7 +25,6 @@ if(isset($_SESSION["carrito"])){
   $carrito = $_SESSION["carrito"];
 }
 
-echo "<br>Pushing new obj to cart</br>";
 array_push($carrito, $product);
 $_SESSION["carrito"] = $carrito;
 

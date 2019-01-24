@@ -28,7 +28,7 @@
           echo "<td>\$".$p->getPrice()."</td>";
           echo "<td>".$p->getStock()."</td>";
           echo "<td>";
-            echo "<form action='../controllers/add.php' method='post'>";
+            echo "<form action='../controllers/addToCart.php' method='post'>";
               echo "<input type='hidden' name='txtId' value='".$p->getId()."'>";
               echo "<input type='hidden' name='txtName' value='".$p->getName()."'>";
               echo "<input type='hidden' name='txtPrice' value='".$p->getPrice()."'>";
@@ -56,6 +56,7 @@
           echo "</tr>";
 
           $total = 0;
+          $index = 0;
           echo "Carrito size ".count($carrito);
           foreach ($carrito as $product) {
             echo "<tr>";
@@ -63,13 +64,19 @@
               echo "<td>".$product->getName()."</td>";
               echo "<td>".$product->getPrice()."</td>";
               echo "<td>".$product->amount."</td>";
-              echo "<td>".$product->subTotal."</td>";
+              echo "<td>\$".$product->subTotal."</td>";
+              echo "<td>";
+                echo "<a href='../controllers/removeFromCart.php?in=$index'>Remove</a>";
+              echo "</td>";
               $total += $product->subTotal;
             echo "</tr>";
+            $index++;
           }
+          echo "<tr>";
+          echo "<td colspan='4'>Total: </td>";
+          echo "<td colspan='2'><b>\$$total<b></td>";
+          echo "<tr>";
           echo "</table>";
-          echo "<hr>";
-          echo "Total: ".$total;
         }
      ?>
   </body>
