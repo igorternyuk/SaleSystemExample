@@ -1,5 +1,5 @@
 <?php
-require_once "../models/Product.php";
+require_once "../models/Data.php";
 
 $id = $_POST["txtId"];
 $name = $_POST["txtName"];
@@ -7,25 +7,35 @@ $price = $_POST["txtPrice"];
 $stock = $_POST["txtStock"];
 $amount = $_POST["amount"];
 
-$product = new Product($name, $price, $stock, $id);
-$product->setAmount($amount);
+if($amount <= 0){
+  header("location: ../views/index.php?message=1");
+} else {
+  $product = new Product($name, $price, $stock, $id);
+  $product->setAmount($amount);
 
-/*echo "<br>id = ".$product->getId();
-echo "<br>name = ".$product->getName();
-echo "<br>price = ".$product->getPrice();
-echo "<br>stock = ".$product->getStock();
-echo "<br>amount = ".$product->amount;
-echo "<br>SubTotal = ".$product->subTotal;*/
+  $data = new Data();
 
-session_start();
+  session_start();
+  $carrito = array();
+  if(isset($_SESSION["carrito"])){
+    $carrito = $_SESSION["carrito"];
+  }
 
-$carrito = array();
-if(isset($_SESSION["carrito"])){
-  $carrito = $_SESSION["carrito"];
+  $totalAmount = 0;
+  foreach ($carrito as $p) {
+    if($p->getId() == $id){
+        $totalAmount += $p->getAmount();
+    }
+  }
+  $totalAmount += $amount;
+  echo "<br>totalAmount = $totalAmount</br>";
+  echo "<br>stock = $stock</br>";
+  if($product->getStock() >= $totalAmount){
+    array_push($carrito, $product);
+    $_SESSION["carrito"] = $carrito;
+  } else {
+      header("location: ../views/index.php?message=2");
+  }
+  header("location: ../views/index.php");
 }
-
-array_push($carrito, $product);
-$_SESSION["carrito"] = $carrito;
-
-header("location: ../views/index.php");
 ?>

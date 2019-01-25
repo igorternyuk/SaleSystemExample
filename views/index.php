@@ -33,7 +33,7 @@
               echo "<input type='hidden' name='txtName' value='".$p->getName()."'>";
               echo "<input type='hidden' name='txtPrice' value='".$p->getPrice()."'>";
               echo "<input type='hidden' name='txtStock' value='".$p->getStock()."'>";
-              echo "<input type='number' placeholder='amount' name='amount' >";
+              echo "<input type='number' placeholder='amount' name='amount' required='required'>";
               echo "<input type='submit' name='btnAdd' value='Add'>";
             echo "</form>";
           echo "</td>";
@@ -41,6 +41,17 @@
         }
       ?>
     </table>
+
+    <?php
+      if(isset($_GET["message"])){
+        $message = $_GET["message"];
+        if($message == "1"){
+          echo "<br><b>Amount should be a positive number</b></br>";
+        } else if($message == "2"){
+          echo "<br><b>Selected product has no stock</b></br>";
+        }
+      }
+    ?>
 
     <?php
         if(isset($_SESSION["carrito"])){

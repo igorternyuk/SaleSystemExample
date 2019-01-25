@@ -34,19 +34,25 @@
         $lastSaleId = $reg[0];
       }
       foreach ($productList as $product) {
-        /*
-        id int auto_increment,
-        sale_id int,
-        product_id int,
-        amount int,
-        sub_total int,
-        */
         $query = "insert into detail values(null, '".$lastSaleId."',
          '".$product->getId()."',
          '".$product->getAmount()."',
          '".$product->getSubTotal()."');";
          $this->connection->execute($query);
+         $this->updateStock($product->getId(), $product->getAmount());
       }
+    }
+
+    public function updateStock($id, $stockToDiscount){
+      $query = "select stock from product where id = $id;";
+      $res = $this->connection->execute($query);
+      $currStock = 0;
+      if($reg = $res->fetch_array()){
+        $currStock = $reg[0];
+      }
+      $currStock -= $stockToDiscount;
+      $query = "update product set stock = $currStock where id = $id;";
+      $this->connection->execute($query);
     }
   }
 

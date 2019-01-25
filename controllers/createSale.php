@@ -6,6 +6,7 @@
       $total = $_SESSION["total"];
       $data = new Data();
       $data->createSale($carrito, $total);
+
       unset($_SESSION["carrito"]);
       unset($_SESSION["total"]);
   }
