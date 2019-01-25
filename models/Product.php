@@ -6,8 +6,7 @@ class Product
   private $name;
   private $price;
   private $stock;
-  public $amount;
-  public $subTotal;
+  private $amount;
 
   public function __construct($name, $price, $stock, $id = 0) {
     $this->id = $id;
@@ -15,7 +14,6 @@ class Product
     $this->price = $price;
     $this->stock = $stock;
     $this->amount = 0;
-    $this->subTotal = 0;
   }
 
   public function getId(){
@@ -32,6 +30,18 @@ class Product
 
   public function getStock(){
     return $this->stock;
+  }
+
+  public function setAmount($amount){
+    $this->amount = $amount;
+  }
+
+  public function getAmount(){
+    return $this->amount;
+  }
+
+  public function getSubTotal(){
+    return $this->amount * $this->price;
   }
 }
  ?>

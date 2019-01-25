@@ -23,6 +23,31 @@
       }
       return $products;
     }
+
+    public function createSale($productList, $total){
+      $query = "insert into sale values(null, now(), $total);";
+      $this->connection->execute($query);
+      $query = "select max(id) from sale;";
+      $res = $this->connection->execute($query);
+      $lastSaleId = 0;
+      if($reg = $res->fetch_array()){
+        $lastSaleId = $reg[0];
+      }
+      foreach ($productList as $product) {
+        /*
+        id int auto_increment,
+        sale_id int,
+        product_id int,
+        amount int,
+        sub_total int,
+        */
+        $query = "insert into detail values(null, '".$lastSaleId."',
+         '".$product->getId()."',
+         '".$product->getAmount()."',
+         '".$product->getSubTotal()."');";
+         $this->connection->execute($query);
+      }
+    }
   }
 
 ?>

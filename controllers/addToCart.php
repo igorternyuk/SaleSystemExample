@@ -8,8 +8,7 @@ $stock = $_POST["txtStock"];
 $amount = $_POST["amount"];
 
 $product = new Product($name, $price, $stock, $id);
-$product->amount = $amount;
-$product->subTotal = $product->amount * $product->getPrice();
+$product->setAmount($amount);
 
 /*echo "<br>id = ".$product->getId();
 echo "<br>name = ".$product->getName();

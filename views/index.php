@@ -57,26 +57,36 @@
 
           $total = 0;
           $index = 0;
-          echo "Carrito size ".count($carrito);
           foreach ($carrito as $product) {
             echo "<tr>";
               echo "<td>".$product->getId()."</td>";
               echo "<td>".$product->getName()."</td>";
               echo "<td>".$product->getPrice()."</td>";
-              echo "<td>".$product->amount."</td>";
-              echo "<td>\$".$product->subTotal."</td>";
+              echo "<td>".$product->getAmount()."</td>";
+              echo "<td>\$".$product->getSubTotal()."</td>";
               echo "<td>";
                 echo "<a href='../controllers/removeFromCart.php?in=$index'>Remove</a>";
               echo "</td>";
-              $total += $product->subTotal;
+              $total += $product->getSubTotal();
             echo "</tr>";
             $index++;
           }
+          $_SESSION["total"] = $total;
           echo "<tr>";
           echo "<td colspan='4'>Total: </td>";
           echo "<td colspan='2'><b>\$$total<b></td>";
           echo "<tr>";
+
+          echo "<tr>";
+            echo "<td colspan='6'>";
+              echo "<form action='../controllers/createSale.php' method='post'>";
+                echo "<input type='submit' value='Buy'>";
+              echo "</form>";
+            echo "</td>";
+          echo "</tr>";
           echo "</table>";
+        } else {
+          echo "<h1>Your shopping cart is empty</h1>";
         }
      ?>
   </body>
