@@ -9,12 +9,13 @@
     private $connection;
     public function __construct()
     {
-      $this->connection = new Connection("localhost", "sales", "igor", "1319");
+      $this->connection = new Connection("127.0.0.1", "sales", "igor", "1319");
     }
 
     public function getProducts(){
       $products = array();
-      $query = "select * from product;";
+      $query = "SELECT * FROM product;";
+      $this->connection->connect();
       $resultSet = $this->connection->execute($query);
       if($resultSet->num_rows > 0){
         while($reg = $resultSet->fetch_array()){
@@ -23,12 +24,14 @@
            array_push($products, $product);
         }
       }
+      $this->connection->disconnect();
       return $products;
     }
 
     public function getSales(){
       $sales = array();
-      $query = "select * from sale;";
+      $query = "SELECT * FROM sale;";
+      $this->connection->connect();
       $resultSet = $this->connection->execute($query);
       if($resultSet->num_rows > 0){
         while($reg = $resultSet->fetch_array()){
@@ -36,12 +39,14 @@
            array_push($sales, $sale);
         }
       }
+      $this->connection->disconnect();
       return $sales;
     }
 
     public function getDetails($saleId){
-      $query = "select d.id, p.name, p.price, d.amount, d.sub_total from detail d,
-       product p where d.sale_id = $saleId and p.id = d.product_id;";
+      $query = "SELECT d.id, p.name, p.price, d.amount, d.sub_total FROM detail d,
+       product p WHERE d.sale_id = $saleId AND p.id = d.product_id;";
+       $this->connection->connect();
       $res = $this->connection->execute($query);
       $details = array();
       if($res->num_rows > 0){
@@ -51,39 +56,46 @@
           array_push($details, $detail);
         }
       }
-
+      $this->connection->disconnect();
       return $details;
     }
 
     public function createSale($productList, $total){
-      $query = "insert into sale values(null, now(), $total);";
+      $query = "INSERT INTO sale VALUES(null, now(), $total);";
+      $this->connection->connect();
       $this->connection->execute($query);
-      $query = "select max(id) from sale;";
+      $query = "SELECT max(id) FROM sale;";
       $res = $this->connection->execute($query);
+      $this->connection->disconnect();
       $lastSaleId = 0;
       if($reg = $res->fetch_array()){
         $lastSaleId = $reg[0];
       }
       foreach ($productList as $product) {
-        $query = "insert into detail values(null, '".$lastSaleId."',
+        $this->connection->connect();
+        $query = "INSERT INTO detail VALUES(null, '".$lastSaleId."',
          '".$product->getId()."',
          '".$product->getAmount()."',
          '".$product->getSubTotal()."');";
          $this->connection->execute($query);
+         $this->connection->disconnect();
          $this->updateStock($product->getId(), $product->getAmount());
       }
+      return count($productList);
     }
 
     public function updateStock($id, $stockToDiscount){
-      $query = "select stock from product where id = $id;";
+      $query = "SELECT stock FROM product WHERE id = $id;";
+      $this->connection->connect();
       $res = $this->connection->execute($query);
       $currStock = 0;
       if($reg = $res->fetch_array()){
         $currStock = $reg[0];
       }
       $currStock -= $stockToDiscount;
-      $query = "update product set stock = $currStock where id = $id;";
+      $query = "UPDATE product SET stock = $currStock WHERE id = $id;";
       $this->connection->execute($query);
+      $this->connection->disconnect();
     }
   }
 

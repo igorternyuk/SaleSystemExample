@@ -5,11 +5,10 @@
       $carrito = $_SESSION["carrito"];
       $total = $_SESSION["total"];
       $data = new Data();
-      $data->createSale($carrito, $total);
-
+      $numProductos = $data->createSale($carrito, $total);
+      echo "Productos comprados = $numProductos";
       unset($_SESSION["carrito"]);
       unset($_SESSION["total"]);
   }
   header("location: ../views/index.php");
-
   ?>
