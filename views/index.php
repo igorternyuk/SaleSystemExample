@@ -41,7 +41,7 @@
         }
       ?>
     </table>
-
+    <a href='sales.php'>View sales</a>
     <?php
       if(isset($_GET["message"])){
         $message = $_GET["message"];

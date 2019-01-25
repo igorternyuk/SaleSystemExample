@@ -1,6 +1,8 @@
 <?php
   require_once "Connection.php";
   require_once "Product.php";
+  require_once "Sale.php";
+  require_once "Detail.php";
 
   class Data
   {
@@ -22,6 +24,35 @@
         }
       }
       return $products;
+    }
+
+    public function getSales(){
+      $sales = array();
+      $query = "select * from sale;";
+      $resultSet = $this->connection->execute($query);
+      if($resultSet->num_rows > 0){
+        while($reg = $resultSet->fetch_array()){
+          $sale = new Sale($reg['fecha'], $reg['total'], $reg['id']);
+           array_push($sales, $sale);
+        }
+      }
+      return $sales;
+    }
+
+    public function getDetails($saleId){
+      $query = "select d.id, p.name, p.price, d.amount, d.sub_total from detail d,
+       product p where d.sale_id = $saleId and p.id = d.product_id;";
+      $res = $this->connection->execute($query);
+      $details = array();
+      if($res->num_rows > 0){
+        while($reg = $res->fetch_array()){
+          $detail = new Detail($reg['id'], $reg['name'], $reg['price'],
+                                $reg['amount'], $reg['sub_total']);
+          array_push($details, $detail);
+        }
+      }
+
+      return $details;
     }
 
     public function createSale($productList, $total){
