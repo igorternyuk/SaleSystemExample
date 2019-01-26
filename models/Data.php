@@ -72,7 +72,6 @@
         $query = "CALL createDetail($p, $a, $s);";
         $this->connection->execute($query);
         $this->connection->disconnect();
-        $this->updateStock($product->getId(), $product->getAmount());
       }
       return count($productList);
     }

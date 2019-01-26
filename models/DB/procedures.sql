@@ -27,6 +27,7 @@ BEGIN
   DECLARE lastSailId INT;
   SET lastSailId = (SELECT getMaxSaleId());
   INSERT INTO detail VALUES(null, lastSailId, productId, amount, subTotal);
+  CALL updateStock(productId, amount);
 END // DELIMITER ;
 
 DELIMITER //
